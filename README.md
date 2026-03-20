@@ -1,4 +1,4 @@
-# Stitcher
+# Stitcher V1
 
 A Python/Tkinter GUI tool for blending and merging independently-created heightmap tiles, targeting terrain workflows (e.g., Unreal Engine landscapes).
 
