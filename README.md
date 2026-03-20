@@ -2,6 +2,8 @@
 
 A Python/Tkinter GUI tool for blending and merging independently-created heightmap tiles, targeting terrain workflows (e.g., Unreal Engine landscapes).
 
+![Heightmap Tile Stitcher UI](screenshot.png)
+
 ## Features
 
 - **Two Export Modes**
