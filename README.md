@@ -120,15 +120,16 @@ The bottom of the window shows a scrollable log with status messages, tile loadi
 
 # Stitcher V2
 
-A native Rust/egui rewrite of the Heightmap Tile Stitcher with improved blending algorithms, faster performance, and a cross-platform GUI.
+A native Rust/egui rewrite of the Heightmap Tile Stitcher with improved blending algorithms, faster performance, and a custom Trilithium/brushed-metal themed GUI.
 
 ![Heightmap Tile Stitcher V2 UI](screenshot_v2.png)
 
 ## What's New in V2
 
 - **Native Rust** — compiled binary, no Python runtime required. Significantly faster blending on large tiles.
-- **egui GUI** — immediate-mode UI with a custom Trilithium/brushed-metal theme. Responsive and cross-platform (Windows, macOS, Linux).
-- **Improved Ultra blending** — graph-cut optimal seam finding + 2D Poisson solve + thermal erosion (replaces Laplacian pyramid from V1).
+- **Standalone exe** — pre-built Windows binary available in the `StitcherApp/` folder (no build step required).
+- **egui GUI** — immediate-mode UI with a custom Trilithium/brushed-metal theme and custom title bar. Responsive and cross-platform.
+- **Improved blending** — Laplacian pyramid multi-resolution blending for High quality; gradient-aware graph-cut seam + Laplacian pyramid + Poisson smooth + thermal erosion for Ultra.
 - **Three binaries** — GUI app, CLI tool, and a batch R16-to-PNG converter.
 
 ## Features
@@ -140,21 +141,27 @@ A native Rust/egui rewrite of the Heightmap Tile Stitcher with improved blending
 
 - **Three Blend Quality Levels**
   - **Fast** — smoothstep crossfade with edge height matching
-  - **High** (default) — gradient-domain Poisson blend with smooth height matching
-  - **Ultra** — graph-cut optimal seam + 2D Poisson solve + thermal erosion
+  - **High** (default) — Laplacian pyramid multi-resolution blend with smoothstep mask
+  - **Ultra** — gradient-aware graph-cut seam + Laplacian pyramid blend + wide-band Poisson smooth + thermal erosion
 
 - **Format Support**
   - 16-bit grayscale PNG (full precision)
   - 8-bit PNG (normalized)
   - Unreal Engine R16 raw format (auto-detects standard UE5 landscape dimensions)
 
-- **Paint Tab** for manual touch-ups with five brush types (Soft, Round, Noise1/2/3), adjustable size, opacity, and height value
+- **Paint Tab** for manual touch-ups with adjustable brush size, opacity, and height value
 
-## Requirements
+## Quick Start (Pre-built)
 
-- Rust toolchain (for building from source)
+Run the standalone executable directly — no build step required:
 
-## Building & Running
+```
+StitcherApp/Stitcher.exe
+```
+
+## Building from Source
+
+Requires the Rust toolchain:
 
 ```bash
 cd stitch_tiles_rs
@@ -165,6 +172,12 @@ cargo build --release
 
 ```bash
 cargo run --release --bin stitch_tiles
+```
+
+### CLI Tool
+
+```bash
+cargo run --release --bin stitch_tiles_cli
 ```
 
 ### Batch R16-to-PNG Converter
@@ -199,12 +212,9 @@ The right-side panel controls all processing options:
 - **Blend Margin** — The pixel width of the overlap region used for blending seams (256, 512, 1024, 2048, or 4096).
 - **Blend Quality** — Controls the blending algorithm complexity:
   - **Fast** — Smoothstep crossfade with edge height matching. Quick but may show visible seams.
-  - **High** — Gradient-domain Poisson blend with smooth height matching. Good balance of quality and speed.
-  - **Ultra** — Graph-cut optimal seam + 2D Poisson solve + thermal erosion. Best quality, slowest.
+  - **High** — Laplacian pyramid multi-resolution blend with smoothstep mask. Good balance of quality and speed.
+  - **Ultra** — Gradient-aware graph-cut seam + Laplacian pyramid blend + Poisson smooth + thermal erosion. Best quality, slowest.
 - **Options** — Toggle individual processing features:
-  - **Blur** — Apply smoothing to the blended region.
-  - **Height Preserve** — Maintain elevation consistency across seams.
-  - **Feature Spill** — Prevent terrain features from disappearing at tile boundaries.
   - **Terrain Extend** — Extend height corrections deep into tiles.
 - **Grid Size** — Set the number of columns and rows (1–8 each).
 - **Save Path** — Set the output directory. Click `...` to browse.
@@ -234,11 +244,7 @@ The **PAINT** tab lets you manually touch up the merged heightmap before final e
 
 **Paint Tools** (in the settings panel):
 
-- **Brush** — Choose from five brush types:
-  - **Soft** — Gaussian falloff for smooth blending.
-  - **Round** — Hard-edged circle.
-  - **Noise1 / Noise2 / Noise3** — Soft brush masked with noise textures for organic edits.
-- **Size** — Brush diameter in pixels (50–2500).
+- **Size** — Brush diameter in pixels.
 - **Opacity** — Brush strength per stroke (0.01–1.0).
 - **Height Value** — The target height to paint with, selected from a gradient bar.
 - **UNDO** — Revert the last paint stroke (`Ctrl+Z`).

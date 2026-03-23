@@ -1,0 +1,33 @@
+[package]
+name = "stitch_tiles"
+version = "0.2.0"
+edition = "2024"
+description = "Heightmap tile stitcher with GUI - blends edges for seamless terrain"
+
+[[bin]]
+name = "stitch_tiles"
+path = "src/main.rs"
+
+[[bin]]
+name = "stitch_tiles_cli"
+path = "src/cli.rs"
+
+[[bin]]
+name = "convert_r16"
+path = "src/convert.rs"
+
+[dependencies]
+eframe = { version = "0.31", features = ["default"] }
+egui = "0.31"
+egui_extras = { version = "0.31", features = ["image"] }
+image = "0.25"
+regex = "1"
+rfd = "0.15"
+rand = "0.9"
+
+[build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true

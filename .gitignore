@@ -4,3 +4,4 @@ dist/
 __pycache__/
 *.pyc
 stitch_log.txt
+stitch_tiles_rs/target/
